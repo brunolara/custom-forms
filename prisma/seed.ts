@@ -10,9 +10,17 @@ async function main() {
                 email: 'bru.lara@live.com',
                 password: bcryptjs.hashSync('123456'),
                 formConfigs: {
-                    create:{
-                      title: "Form doido"
-                    }
+                    create: {
+						title: "Form doido",
+						fields:{
+							create:{
+								name: 'ronaldo',
+								label: 'adriano',
+								field_type_id: 1,
+							
+							}
+						}
+					  }
                 }
             }
         }
