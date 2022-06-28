@@ -1,0 +1,15 @@
+datasource db {
+  url      = "mysql://root:@localhost:3306/forms"
+  provider = "mysql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  email     String   @unique
+  name      String?
+}
