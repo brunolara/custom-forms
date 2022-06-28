@@ -8,8 +8,79 @@ generator client {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email     String   @unique
-  name      String?
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  email       String       @unique
+  name        String
+  password    String
+  formConfigs FormConfig[]
+
+  @@map("users")
+}
+
+model FormConfig {
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
+  title     String
+  user_id   Int
+  fields    Field[]
+  formEntry FormEntry[]
+  user      User        @relation(fields: [user_id], references: [id])
+
+  @@map("form_configs")
+}
+
+model FieldType {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  visibility  Boolean  @default(true)
+  errorMsg    String?
+  html_tag    String
+  description String?
+  fields      Field[]
+
+  @@map("field_types")
+}
+
+model Field {
+  id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  name            String           @unique
+  label           String
+  max_length      Int?
+  min_length      Int?
+  required        Boolean          @default(false)
+  additional_data Json?
+  order           Int?
+  placeholder     String?
+  hint            String?
+  field_type_id   Int
+  form_config_id  Int
+  fieldType       FieldType        @relation(fields: [field_type_id], references: [id])
+  formConfig      FormConfig       @relation(fields: [form_config_id], references: [id])
+  formEntryValues FormEntryValue[]
+
+  @@map("fields")
+}
+
+model FormEntry {
+  id              Int              @id @default(autoincrement())
+  createdAt       DateTime         @default(now())
+  form_config_id  Int
+  formConfig      FormConfig       @relation(fields: [form_config_id], references: [id])
+  formEntryValues FormEntryValue[]
+
+  @@map("form_entries")
+}
+
+model FormEntryValue {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  value       String
+  formEntryId Int
+  fieldId     Int
+  formEntry   FormEntry @relation(fields: [formEntryId], references: [id])
+  field       Field     @relation(fields: [fieldId], references: [id])
+
+  @@map("form_entry_values")
 }
